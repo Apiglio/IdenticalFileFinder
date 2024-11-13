@@ -1,0 +1,112 @@
+object Form_IdenticalFileFinder: TForm_IdenticalFileFinder
+  Left = 713
+  Height = 451
+  Top = 525
+  Width = 867
+  AllowDropFiles = True
+  Caption = 'Apiglio Identical File Finder'
+  ClientHeight = 421
+  ClientWidth = 867
+  Constraints.MinHeight = 240
+  Constraints.MinWidth = 360
+  DesignTimePPI = 144
+  Menu = MainMenu_IFF
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnDropFiles = FormDropFiles
+  OnResize = FormResize
+  Position = poScreenCenter
+  LCLVersion = '1.8.4.0'
+  object StringGrid_FileList: TStringGrid
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 421
+    Top = 0
+    Width = 867
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    ColCount = 4
+    Columns = <    
+      item
+        Title.Caption = 'Size'
+        Width = 120
+      end    
+      item
+        Title.Caption = 'Path'
+        Width = 261
+      end    
+      item
+        Title.Caption = 'Index'
+        Width = 4
+      end>
+    DefaultColWidth = 32
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goSmoothScroll]
+    RowCount = 1
+    TabOrder = 0
+    OnDrawCell = StringGrid_FileListDrawCell
+    OnMouseUp = StringGrid_FileListMouseUp
+  end
+  object MainMenu_IFF: TMainMenu
+    left = 288
+    top = 264
+    object MenuItem_Analysis: TMenuItem
+      Caption = '分析'
+      object MenuItem_Analysis_OpenDirectory: TMenuItem
+        Caption = '分析目录'
+        OnClick = MenuItem_Analysis_OpenDirectoryClick
+      end
+    end
+    object MenuItem_Display: TMenuItem
+      Caption = '显示'
+      object MenuItem_Display_SameSizeOnly: TMenuItem
+        Caption = '仅大小相同项'
+        OnClick = MenuItem_Display_SameSizeOnlyClick
+      end
+      object MenuItem_Display_MultiByteUnit: TMenuItem
+        Caption = '分级单位显示'
+        Checked = True
+        OnClick = MenuItem_Display_MultiByteUnitClick
+      end
+    end
+  end
+  object SelectDirectoryDialog: TSelectDirectoryDialog
+    left = 112
+    top = 264
+  end
+  object PopupMenu_IFF: TPopupMenu
+    left = 432
+    top = 264
+    object MenuItem_Popup_Open: TMenuItem
+      Caption = '打开'
+      OnClick = MenuItem_Popup_OpenClick
+    end
+    object MenuItem_Popup_OpenDir: TMenuItem
+      Caption = '在文件夹中显示'
+      OnClick = MenuItem_Popup_OpenDirClick
+    end
+    object MenuItem_Popup_Rename: TMenuItem
+      Caption = '重命名'
+    end
+    object MenuItem_Popup_div_01: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem_Popup_SameSizeTitle: TMenuItem
+      Caption = '相同大小文件选项'
+      Enabled = False
+    end
+    object MenuItem_Popup_MakeUnique: TMenuItem
+      Caption = '　仅保留此项'
+    end
+    object MenuItem_Popup_Delete: TMenuItem
+      Caption = '　仅删除此项'
+      OnClick = MenuItem_Popup_DeleteClick
+    end
+    object MenuItem_Popup_CompareAll: TMenuItem
+      Caption = '　对比所有项'
+    end
+  end
+end

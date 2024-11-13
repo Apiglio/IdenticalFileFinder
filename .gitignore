@@ -1,0 +1,4 @@
+*.exe
+*.bak
+/lib/*
+/backup/*
