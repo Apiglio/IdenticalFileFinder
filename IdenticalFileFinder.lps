@@ -4,13 +4,13 @@
     <PathDelim Value="\"/>
     <Version Value="10"/>
     <BuildModes Active="Default"/>
-    <Units Count="8">
+    <Units Count="12">
       <Unit0>
         <Filename Value="IdenticalFileFinder.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos X="36" Y="10"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -20,9 +20,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="286"/>
-        <CursorPos X="5" Y="297"/>
-        <UsageCount Value="20"/>
+        <TopLine Value="323"/>
+        <CursorPos X="44" Y="349"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -31,7 +31,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
         <CursorPos X="39" Y="28"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
@@ -39,21 +39,21 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="530"/>
         <CursorPos X="50" Y="557"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit3>
       <Unit4>
         <Filename Value="C:\lazarus\lcl\include\application.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="956"/>
         <CursorPos Y="973"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit4>
       <Unit5>
         <Filename Value="C:\lazarus\lcl\include\control.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="5652"/>
         <CursorPos Y="5669"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit5>
       <Unit6>
         <Filename Value="C:\lazarus\lcl\grids.pas"/>
@@ -61,7 +61,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="879"/>
         <CursorPos X="18" Y="886"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit6>
       <Unit7>
         <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\winunits-base\src\shellapi.pp"/>
@@ -69,130 +69,154 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1303"/>
         <CursorPos X="10" Y="1321"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit7>
+      <Unit8>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\hash\src\md5.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="623"/>
+        <CursorPos X="11" Y="599"/>
+        <UsageCount Value="9"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="C:\lazarus\lcl\include\menuitem.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="68"/>
+        <CursorPos Y="85"/>
+        <UsageCount Value="9"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="C:\lazarus\components\lazutils\fileutil.pas"/>
+        <UnitName Value="FileUtil"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="55"/>
+        <UsageCount Value="10"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="C:\lazarus\components\lazutils\fileutil.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="411"/>
+        <CursorPos Y="429"/>
+        <UsageCount Value="10"/>
+      </Unit11>
     </Units>
-    <JumpHistory Count="30" HistoryIndex="29">
+    <JumpHistory Count="29" HistoryIndex="28">
       <Position1>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="78" Column="5" TopLine="61"/>
+        <Caret Line="357" TopLine="338"/>
       </Position1>
       <Position2>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="362" Column="56" TopLine="336"/>
+        <Caret Line="263" Column="30" TopLine="245"/>
       </Position2>
       <Position3>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="81" Column="34" TopLine="65"/>
+        <Caret Line="259" Column="44" TopLine="245"/>
       </Position3>
       <Position4>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="394" TopLine="363"/>
+        <Caret Line="262" TopLine="245"/>
       </Position4>
       <Position5>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="395" TopLine="363"/>
+        <Caret Line="245" TopLine="226"/>
       </Position5>
       <Position6>
-        <Filename Value="iff_file_operation.pas"/>
-        <Caret Line="17"/>
+        <Filename Value="identical_file_finder_main.pas"/>
+        <Caret Line="246" TopLine="226"/>
       </Position6>
       <Position7>
-        <Filename Value="iff_file_operation.pas"/>
-        <Caret Line="18"/>
+        <Filename Value="identical_file_finder_main.pas"/>
+        <Caret Line="247" TopLine="226"/>
       </Position7>
       <Position8>
-        <Filename Value="iff_file_operation.pas"/>
-        <Caret Line="19"/>
+        <Filename Value="identical_file_finder_main.pas"/>
+        <Caret Line="248" TopLine="226"/>
       </Position8>
       <Position9>
-        <Filename Value="iff_file_operation.pas"/>
-        <Caret Line="20"/>
+        <Filename Value="identical_file_finder_main.pas"/>
+        <Caret Line="249" TopLine="226"/>
       </Position9>
       <Position10>
-        <Filename Value="iff_file_operation.pas"/>
-        <Caret Line="21"/>
+        <Filename Value="identical_file_finder_main.pas"/>
+        <Caret Line="250" TopLine="226"/>
       </Position10>
       <Position11>
-        <Filename Value="iff_file_operation.pas"/>
-        <Caret Line="22"/>
+        <Filename Value="identical_file_finder_main.pas"/>
+        <Caret Line="251" TopLine="226"/>
       </Position11>
       <Position12>
-        <Filename Value="iff_file_operation.pas"/>
-        <Caret Line="23"/>
+        <Filename Value="identical_file_finder_main.pas"/>
+        <Caret Line="252" TopLine="226"/>
       </Position12>
       <Position13>
-        <Filename Value="iff_file_operation.pas"/>
-        <Caret Line="24"/>
+        <Filename Value="identical_file_finder_main.pas"/>
+        <Caret Line="253" TopLine="242"/>
       </Position13>
       <Position14>
-        <Filename Value="iff_file_operation.pas"/>
-        <Caret Line="23" Column="15"/>
+        <Filename Value="identical_file_finder_main.pas"/>
+        <Caret Line="277" Column="21" TopLine="398"/>
       </Position14>
       <Position15>
-        <Filename Value="iff_file_operation.pas"/>
-        <Caret Line="17"/>
+        <Filename Value="identical_file_finder_main.pas"/>
+        <Caret Line="141" Column="46" TopLine="136"/>
       </Position15>
       <Position16>
-        <Filename Value="iff_file_operation.pas"/>
-        <Caret Line="26"/>
+        <Filename Value="identical_file_finder_main.pas"/>
+        <Caret Line="51" Column="20" TopLine="41"/>
       </Position16>
       <Position17>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="124" Column="18" TopLine="105"/>
+        <Caret Line="404" Column="14" TopLine="393"/>
       </Position17>
       <Position18>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="393" TopLine="363"/>
+        <Caret Line="114" Column="15" TopLine="97"/>
       </Position18>
       <Position19>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="395" Column="43" TopLine="362"/>
+        <Caret Line="545" Column="55" TopLine="401"/>
       </Position19>
       <Position20>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="28" Column="15" TopLine="10"/>
+        <Caret Line="395" Column="28" TopLine="393"/>
       </Position20>
       <Position21>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="124" TopLine="105"/>
+        <Caret Line="114" Column="15" TopLine="97"/>
       </Position21>
       <Position22>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="394" TopLine="363"/>
+        <Caret Line="518" Column="79" TopLine="489"/>
       </Position22>
       <Position23>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="129" Column="50" TopLine="106"/>
+        <Caret Line="516" Column="29" TopLine="527"/>
       </Position23>
       <Position24>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="125" TopLine="106"/>
+        <Caret Line="342" Column="76" TopLine="342"/>
       </Position24>
       <Position25>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="126" TopLine="106"/>
+        <Caret Line="358" TopLine="288"/>
       </Position25>
       <Position26>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="127" TopLine="106"/>
+        <Caret Line="10" Column="13" TopLine="511"/>
       </Position26>
       <Position27>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="128" TopLine="106"/>
+        <Caret Line="343" Column="20" TopLine="326"/>
       </Position27>
       <Position28>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="293" Column="21" TopLine="285"/>
+        <Caret Line="10" Column="3"/>
       </Position28>
       <Position29>
         <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="312" Column="17" TopLine="293"/>
+        <Caret Line="10" Column="3"/>
       </Position29>
-      <Position30>
-        <Filename Value="identical_file_finder_main.pas"/>
-        <Caret Line="311" Column="25" TopLine="293"/>
-      </Position30>
     </JumpHistory>
   </ProjectSession>
   <Debugging>

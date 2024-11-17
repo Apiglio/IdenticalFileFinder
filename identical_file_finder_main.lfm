@@ -59,6 +59,17 @@ object Form_IdenticalFileFinder: TForm_IdenticalFileFinder
         Caption = '分析目录'
         OnClick = MenuItem_Analysis_OpenDirectoryClick
       end
+      object MenuItem_Analysis_div01: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem_Analysis_LoadResult: TMenuItem
+        Caption = '载入分析结果'
+        OnClick = MenuItem_Analysis_LoadResultClick
+      end
+      object MenuItem_Analysis_SaveDirectory: TMenuItem
+        Caption = '保存分析结果'
+        OnClick = MenuItem_Analysis_SaveDirectoryClick
+      end
     end
     object MenuItem_Display: TMenuItem
       Caption = '显示'
@@ -72,8 +83,16 @@ object Form_IdenticalFileFinder: TForm_IdenticalFileFinder
         OnClick = MenuItem_Display_MultiByteUnitClick
       end
     end
+    object MenuItem_Tool: TMenuItem
+      Caption = '工具'
+      object MenuItem_Tool_About: TMenuItem
+        Caption = '关于'
+        OnClick = MenuItem_Tool_AboutClick
+      end
+    end
   end
   object SelectDirectoryDialog: TSelectDirectoryDialog
+    Title = '分析目录'
     left = 112
     top = 264
   end
@@ -90,6 +109,7 @@ object Form_IdenticalFileFinder: TForm_IdenticalFileFinder
     end
     object MenuItem_Popup_Rename: TMenuItem
       Caption = '重命名'
+      OnClick = MenuItem_Popup_RenameClick
     end
     object MenuItem_Popup_div_01: TMenuItem
       Caption = '-'
@@ -108,5 +128,21 @@ object Form_IdenticalFileFinder: TForm_IdenticalFileFinder
     object MenuItem_Popup_CompareAll: TMenuItem
       Caption = '　对比所有项'
     end
+  end
+  object SaveDialog: TSaveDialog
+    Title = '保存分析结果'
+    DefaultExt = '.*.ifs'
+    Filter = 'Identical file finder filelist storage|*.ifs'
+    Options = [ofEnableSizing]
+    left = 112
+    top = 200
+  end
+  object OpenDialog: TOpenDialog
+    Title = '载入分析结果'
+    DefaultExt = '.*.ifs'
+    Filter = 'Identical file finder filelist storage|*.ifs'
+    Options = [ofEnableSizing]
+    left = 112
+    top = 128
   end
 end

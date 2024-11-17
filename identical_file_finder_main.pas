@@ -1,21 +1,35 @@
 unit identical_file_finder_main;
 
 {$mode objfpc}{$H+}
+{$modeswitch advancedrecords}
 
 interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Grids,
-  StdCtrls, Menus, Types;
+  StdCtrls, Menus, Types, md5;
+
+const
+  _version_str_ = '0.1.0';
+  _hash_size_ = 16;
+
+  {$ifdef WINDOWS}
+    CRLF = #13#10;
+  {$else}
+    CRLF = #10;
+  {$endif}
 
 type
 
   TFileRecord = record
     fname :PChar;
+    fhash :PByte;
     fsize :Int64;
     nsize :Int16;
+    hsize :Int8;
     same_size :Int8;
-    //five int8 variables remain
+    //four int8 variables remain
+    procedure GetHash;
   end;
   PFileRecord = ^TFileRecord;
 
@@ -32,6 +46,9 @@ type
     destructor Destroy; override;
   public
     function GetEnumerator: TFileListEnumerator;
+  public
+    procedure LoadFromFile(filename:string);
+    procedure SaveToFile(filename:string);
   end;
 
   TFileListEnumerator = class
@@ -49,6 +66,11 @@ type
 
   TForm_IdenticalFileFinder = class(TForm)
     MainMenu_IFF: TMainMenu;
+    MenuItem_Tool_About: TMenuItem;
+    MenuItem_Tool: TMenuItem;
+    MenuItem_Analysis_SaveDirectory: TMenuItem;
+    MenuItem_Analysis_LoadResult: TMenuItem;
+    MenuItem_Analysis_div01: TMenuItem;
     MenuItem_Popup_SameSizeTitle: TMenuItem;
     MenuItem_Popup_CompareAll: TMenuItem;
     MenuItem_Popup_MakeUnique: TMenuItem;
@@ -62,19 +84,25 @@ type
     MenuItem_Display: TMenuItem;
     MenuItem_Analysis_OpenDirectory: TMenuItem;
     MenuItem_Analysis: TMenuItem;
+    OpenDialog: TOpenDialog;
     PopupMenu_IFF: TPopupMenu;
+    SaveDialog: TSaveDialog;
     SelectDirectoryDialog: TSelectDirectoryDialog;
     StringGrid_FileList: TStringGrid;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of String);
     procedure FormResize(Sender: TObject);
+    procedure MenuItem_Analysis_LoadResultClick(Sender: TObject);
     procedure MenuItem_Analysis_OpenDirectoryClick(Sender: TObject);
+    procedure MenuItem_Analysis_SaveDirectoryClick(Sender: TObject);
     procedure MenuItem_Display_MultiByteUnitClick(Sender: TObject);
     procedure MenuItem_Display_SameSizeOnlyClick(Sender: TObject);
     procedure MenuItem_Popup_DeleteClick(Sender: TObject);
     procedure MenuItem_Popup_OpenClick(Sender: TObject);
     procedure MenuItem_Popup_OpenDirClick(Sender: TObject);
+    procedure MenuItem_Popup_RenameClick(Sender: TObject);
+    procedure MenuItem_Tool_AboutClick(Sender: TObject);
     procedure StringGrid_FileListDrawCell(Sender: TObject; aCol, aRow: Integer;
       aRect: TRect; aState: TGridDrawState);
     procedure StringGrid_FileListMouseUp(Sender: TObject; Button: TMouseButton;
@@ -83,7 +111,10 @@ type
     function MenuFunc_OpenDirectory(afilename:string):boolean;
     function MenuFunc_DeleteFile(list_index:integer):boolean;
   private
+    function SelectedFilePath:string;
+    function SelectedFileListIndex:integer;
     procedure FileListToStringGrid;
+
   public
     FileList:TFileList;
     DispOption:record
@@ -104,6 +135,16 @@ uses iff_file_operation;
 
 {$R *.lfm}
 
+{ TFileRecord }
+procedure TFileRecord.GetHash;
+begin
+  if not FileExists(fname) then exit;
+  if fhash=nil then fhash:=GetMem(_hash_size_+1);
+  PMDDigest(fhash)^:=md5.MD5File(fname);
+  PMDDigest(fhash)^[_hash_size_]:=0;
+  hsize:=_hash_size_;
+end;
+
 { TFileList }
 
 procedure TFileList.Add(aname:string;asize:int64);
@@ -115,6 +156,8 @@ begin
     nsize:=length(aname);
     fname:=GetMem(nsize+1);
     StrCopy(fname,PChar(aname));
+    fhash:=nil;
+    hsize:=0;
     same_size:=0;
   end;
   FFileList.Add(tmpFileRec);
@@ -128,6 +171,7 @@ begin
   if index<0 then index:=FFileList.Count+index;
   tmpFileRec:=PFileRecord(FFileList.Items[index])^;
   with tmpFileRec do FreeMem(fname,nsize+1);
+  if tmpFileRec.hsize>0 then Freemem(tmpFileRec.fhash,tmpFileRec.hsize+1);
   FreeMem(FFileList.Items[index],SizeOf(TFileRecord));
   FFileList.Delete(index);
 end;
@@ -193,6 +237,63 @@ begin
   result:=TFileListEnumerator.Create(Self);
 end;
 
+procedure TFileList.LoadFromFile(filename:string);
+var Mem:TMemoryStream;
+    tmpFileRec:PFileRecord;
+begin
+  FFileList.Clear;
+  Mem:=TMemoryStream.Create;
+  try
+    Mem.LoadFromFile(filename);
+    Mem.Position:=0;
+    while Mem.Position<Mem.Size do begin
+      tmpFileRec:=GetMem(SizeOf(TFileRecord));
+      with tmpFileRec^ do begin
+        fsize:=Mem.ReadQWord;        //file size
+        nsize:=Mem.ReadWord;         //path size
+        hsize:=Mem.ReadByte;         //hash size
+        same_size:=Mem.ReadByte;     //same-size id
+        Mem.Seek(4,soFromCurrent);   //preserve four bytes
+        fname:=GetMem(nsize+1);
+        Mem.ReadBuffer(fname^,nsize);
+        (fname+nsize)^:=#0;
+        if hsize>0 then begin
+          fhash:=GetMem(hsize+1);
+          Mem.ReadBuffer(fhash^,hsize);
+          (fhash+hsize)^:=0;
+        end;
+      end;
+      FFileList.Insert(0,tmpFileRec);
+    end;
+  finally
+    Mem.Free;
+  end;
+end;
+
+procedure TFileList.SaveToFile(filename:string);
+var Mem:TMemoryStream;
+    Idx:Integer;
+begin
+  Mem:=TMemoryStream.Create;
+  try
+    Mem.Position:=0;
+    for Idx:=FFileList.Count-1 downto 0 do begin
+      with PFileRecord(FFileList.Items[Idx])^ do begin;
+        Mem.WriteQWord(fsize);       //file size
+        Mem.WriteWord(nsize);        //path size
+        Mem.WriteByte(hsize);        //hash size
+        Mem.WriteByte(same_size);    //same-size id
+        Mem.Seek(4,soFromCurrent);   //preserve four bytes
+        Mem.WriteBuffer(fname^,nsize);
+        if hsize>0 then Mem.WriteBuffer(fhash^,hsize);
+      end;
+    end;
+    Mem.Position:=0;
+    Mem.SaveToFile(filename);
+  finally
+    Mem.Free;
+  end;
+end;
 
 { TFileListEnumerator }
 constructor TFileListEnumerator.Create(AFileList: TFileList);
@@ -236,13 +337,22 @@ end;
 
 procedure TForm_IdenticalFileFinder.FormDropFiles(Sender: TObject;
   const FileNames: array of String);
+var ext:string;
 begin
   if Length(FileNames)=1 then begin
     if DirectoryExists(FileNames[0]) then
       MenuFunc_OpenDirectory(FileNames[0])
-    else
-      ShowMessage('仅支持拖拽单个文件夹进行分析');
-  end else ShowMessage('仅支持拖拽单个文件夹进行分析');
+    else begin
+      ext:=ExtractFileExt(FileNames[0]);
+      if lowercase(ext)='.ifs' then
+      try
+        FileList.LoadFromFile(FileNames[0]);
+        FileListToStringGrid;
+      except
+        ShowMessage('导入ifs文件失败');
+      end else ShowMessage('仅支持拖拽单个文件夹进行分析或导入ifs文件');
+    end;
+  end else ShowMessage('仅支持拖拽单个文件夹进行分析或导入ifs文件');
 end;
 
 procedure TForm_IdenticalFileFinder.FormResize(Sender: TObject);
@@ -253,11 +363,28 @@ begin
   StringGrid_FileList.Columns[2].Width:=4;
 end;
 
+procedure TForm_IdenticalFileFinder.MenuItem_Analysis_LoadResultClick(
+  Sender: TObject);
+begin
+  with OpenDialog do if Execute then begin
+    FileList.LoadFromFile(FileName);
+    FileListToStringGrid;
+  end;
+end;
+
 procedure TForm_IdenticalFileFinder.MenuItem_Analysis_OpenDirectoryClick(
   Sender: TObject);
 begin
   if SelectDirectoryDialog.Execute then begin
     if not MenuFunc_OpenDirectory(SelectDirectoryDialog.FileName) then ShowMessage('未知错误');
+  end;
+end;
+
+procedure TForm_IdenticalFileFinder.MenuItem_Analysis_SaveDirectoryClick(
+  Sender: TObject);
+begin
+  with SaveDialog do if Execute then begin
+    FileList.SaveToFile(FileName);
   end;
 end;
 
@@ -312,6 +439,27 @@ begin
   IFF_OpenDir(filename);
 end;
 
+procedure TForm_IdenticalFileFinder.MenuItem_Popup_RenameClick(Sender: TObject);
+var list_index:integer;
+begin
+  //临时用于测试，并非重命名功能
+  list_index:=StrToInt(StringGrid_FileList.Cells[3,StringGrid_FileList.Row]);
+  PFileRecord(FileList.FFileList[list_index])^.GetHash;
+  //
+end;
+
+procedure TForm_IdenticalFileFinder.MenuItem_Tool_AboutClick(Sender: TObject);
+begin
+  MessageDlg(
+    '关于',
+    'Apiglio Identical File Finder '+_version_str_
+    +CRLF+'重复文件查找器'+CRLF
+    +CRLF+'　　递归搜索文件目录，并将所有文件按文件大小排列。'
+    +CRLF+'　　涉及文件操作时再额外对比文件是否完全相同。',
+    mtCustom, [mbOK], 0
+  );
+end;
+
 procedure TForm_IdenticalFileFinder.StringGrid_FileListDrawCell(
   Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
 var number:string;
@@ -359,12 +507,30 @@ begin
   end;
 end;
 
+function TForm_IdenticalFileFinder.SelectedFilePath:string;
+begin
+  result:=StringGrid_FileList.Cells[2,StringGrid_FileList.Row];
+end;
+
+function TForm_IdenticalFileFinder.SelectedFileListIndex:integer;
+var list_index_str:string;
+    codee:integer;
+begin
+  list_index_str:=StringGrid_FileList.Cells[3,StringGrid_FileList.Row];
+  val(list_index_str, result, codee);
+  if codee<0 then result:=-1;
+end;
+
 procedure TForm_IdenticalFileFinder.FileListToStringGrid;
 var tmpFileRec:TFileRecord;
-    idx,list_idx:int64;
+    idx,list_idx,sel_idx:int64;
     ShowFileSize:function(byte_count:int64):string;
 begin
   if DispOption.AutoMultiUnit then ShowFileSize:=@ShowBytes_MultiUnit else ShowFileSize:=@IntToStr;
+
+  sel_idx:=SelectedFileListIndex;
+  if sel_idx<0 then sel_idx:=0;
+
   StringGrid_FileList.Clear;
   StringGrid_FileList.RowCount:=FileList.FFileList.Count+2;
   idx:=1;
@@ -378,6 +544,7 @@ begin
       StringGrid_FileList.Cells[0,idx]:=IntToStr(tmpFileRec.same_size);
     end;
     StringGrid_FileList.Cells[3,idx]:=IntToStr(list_idx);
+    if sel_idx=list_idx then StringGrid_FileList.Row:=idx;
     inc(idx);
   end;
   StringGrid_FileList.RowCount:=idx+1;
